@@ -10,32 +10,34 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="favicon-aa.svg">
-  <link rel="stylesheet" href="home-blackhole.css?v=1">
-  <link rel="stylesheet" href="cursor.css?v=2">
+  <link rel="stylesheet" href="portal-home.css?v=3">
+  <link rel="stylesheet" href="cursor.css?v=3">
 </head>
 <body>
-  <canvas id="blackhole-canvas" aria-hidden="true"></canvas>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+  <div class="ambient ambient-three" aria-hidden="true"></div>
 
-  <div class="corner-flow flow-a" aria-hidden="true"></div>
-  <div class="corner-flow flow-b" aria-hidden="true"></div>
-  <div class="corner-flow flow-c" aria-hidden="true"></div>
+  <button id="portal" class="portal" aria-label="Enter portfolio">
+    <span class="portal-glow" aria-hidden="true"></span>
+    <span class="portal-rim" aria-hidden="true"></span>
+    <span class="portal-core" aria-hidden="true"></span>
+  </button>
 
-  <button id="blackhole-trigger" class="blackhole-trigger" aria-label="Enter portfolio"></button>
-
-  <main id="portfolio" class="portfolio" aria-hidden="true">
-    <section class="portfolio-copy">
-      <p class="kicker">DEVOPS · CLOUD · INFRASTRUCTURE</p>
+  <main id="site" class="site" aria-hidden="true">
+    <section class="site-copy">
+      <p class="eyebrow">DEVOPS · CLOUD · INFRASTRUCTURE</p>
       <h1>ABDUL<br><span>AZEEZ</span></h1>
       <p class="intro">Entry-level DevOps and cloud engineer building hands-on systems with Linux, Docker, AWS, Kafka, CI/CD and infrastructure automation.</p>
 
-      <nav class="section-links" aria-label="Portfolio sections">
-        <a href="profile.html"><b>01</b><span>PROFILE</span><em>Who I am ↗</em></a>
-        <a href="stack.html"><b>02</b><span>STACK</span><em>What I use ↗</em></a>
-        <a href="projects.html"><b>03</b><span>PROJECTS</span><em>What I built ↗</em></a>
-        <a href="contact.html"><b>04</b><span>CONTACT</span><em>Open channel ↗</em></a>
+      <nav class="site-nav" aria-label="Portfolio sections">
+        <a class="portal-link" href="profile.html"><small>01</small><strong>PROFILE</strong><span>WHO I AM</span></a>
+        <a class="portal-link" href="stack.html"><small>02</small><strong>STACK</strong><span>WHAT I USE</span></a>
+        <a class="portal-link" href="projects.html"><small>03</small><strong>PROJECTS</strong><span>WHAT I BUILT</span></a>
+        <a class="portal-link" href="contact.html"><small>04</small><strong>CONTACT</strong><span>OPEN CHANNEL</span></a>
       </nav>
 
-      <div class="external-links">
+      <div class="meta-links">
         <a href="abdul-azeez-resume.pdf" target="_blank" rel="noreferrer">RÉSUMÉ ↗</a>
         <a href="https://github.com/zeez000" target="_blank" rel="noreferrer">GITHUB ↗</a>
         <a href="https://linkedin.com/in/abdul-azeez-046062249" target="_blank" rel="noreferrer">LINKEDIN ↗</a>
@@ -43,7 +45,9 @@
     </section>
   </main>
 
-  <script src="home-blackhole.js?v=1"></script>
-  <script src="cursor.js?v=2"></script>
+  <div class="page-shift" aria-hidden="true"></div>
+
+  <script src="portal-home.js?v=3"></script>
+  <script src="cursor.js?v=3"></script>
 </body>
 </html>
