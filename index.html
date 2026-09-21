@@ -1,218 +1,36 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-page="home">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#020505">
-  <meta name="description" content="Abdul Azeez — DevOps, cloud and infrastructure engineer building with Linux, Docker, AWS, Kafka and automation.">
-  <title>Abdul Azeez | DevOps Control Room</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="Abdul Azeez — DevOps, cloud and infrastructure portfolio.">
+  <title>Abdul Azeez | Event Horizon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
   <link rel="icon" type="image/svg+xml" href="favicon-aa.svg">
+  <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="blackhole.css">
 </head>
 <body>
-  <div class="boot-screen" aria-hidden="true">
-    <div class="boot-console">
-      <p><span>&gt;</span> booting abdul.system</p>
-      <p><span>&gt;</span> loading infrastructure...</p>
-      <p><span>&gt;</span> docker <b>online</b></p>
-      <p><span>&gt;</span> kafka <b>online</b></p>
-      <p><span>&gt;</span> aws <b>connected</b></p>
-      <p><span>&gt;</span> portfolio <b>ready</b></p>
-    </div>
-  </div>
-
-  <canvas id="infra-canvas" aria-hidden="true"></canvas>
-  <div class="grid" aria-hidden="true"></div>
-  <div class="scanline" aria-hidden="true"></div>
-  <div class="cursor-glow" aria-hidden="true"></div>
-  <div class="scroll-progress" aria-hidden="true"><span></span></div>
-
-  <aside class="live-log" aria-label="Simulated portfolio activity">
-    <div class="log-head"><span>PORTFOLIO SIMULATION</span><i></i></div>
-    <div id="log-lines"></div>
-  </aside>
-
-  <header class="nav" data-nav>
-    <a class="logo" href="#home">AA<span>.</span></a>
-    <nav id="primary-navigation" aria-label="Main navigation">
-      <a href="#about">PROFILE</a>
-      <a href="#stack">STACK</a>
-      <a href="#projects">SYSTEMS</a>
-      <a href="#contact">CONTACT</a>
-    </nav>
-    <div class="nav-state"><span id="phase-label">DISCOVER</span><i></i></div>
+  <canvas id="universe" aria-hidden="true"></canvas>
+  <div class="aurora aurora-a" aria-hidden="true"></div><div class="aurora aurora-b" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div><div class="vignette" aria-hidden="true"></div><div class="warp" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="index.html">AA<span>.</span></a>
+    <p class="system-id">SYSTEM://ABDUL_AZEEZ</p>
+    <div class="top-links"><a href="abdul-azeez-resume.pdf" target="_blank" rel="noreferrer">RÉSUMÉ ↗</a><a href="https://github.com/zeez000" target="_blank" rel="noreferrer">GITHUB ↗</a></div>
   </header>
-
-  <main>
-    <section id="home" class="hero">
-      <div class="hero-meta">
-        <span>ABDUL.AZEEZ / DEVOPS</span>
-        <span>BENGALURU · 2026</span>
-      </div>
-
-      <div class="hero-copy-block">
-        <p class="eyebrow">LIVE INFRASTRUCTURE PORTFOLIO</p>
-        <h1>
-          <span>DEVOPS</span>
-          <span class="outline">CLOUD</span>
-          <span>INFRA.</span>
-        </h1>
-        <p class="hero-copy">Entry-level DevOps and cloud engineer building hands-on systems with Linux, Docker, AWS, Kafka, CI/CD and infrastructure automation.</p>
-        <div class="hero-actions">
-          <a class="button primary" href="#projects">ENTER SYSTEM <span>↓</span></a>
-          <a class="button" href="./abdul-azeez-resume.pdf" target="_blank" rel="noreferrer">RÉSUMÉ <span>↗</span></a>
-        </div>
-      </div>
-
-      <div class="status-panel glass">
-        <div class="panel-head"><span>SYSTEM STATUS</span><b>LIVE</b></div>
-        <div class="metric-grid">
-          <div><small>SERVICES</small><strong>06</strong></div>
-          <div><small>HEALTHY</small><strong>06</strong></div>
-          <div><small>PIPELINE</small><strong>PASS</strong></div>
-          <div><small>MODE</small><strong id="mode-value">DISCOVER</strong></div>
-        </div>
-        <div class="service-list">
-          <p><span>linux-core</span><i>HEALTHY</i></p>
-          <p><span>docker-engine</span><i>RUNNING</i></p>
-          <p><span>kafka-broker</span><i>CONNECTED</i></p>
-          <p><span>aws-region</span><i>READY</i></p>
-        </div>
-        <p class="simulation-note">Visual system simulation · not production telemetry</p>
-      </div>
-
-      <div class="scroll-cue"><span>SCROLL TO DEPLOY</span><i></i></div>
-    </section>
-
-    <section id="about" class="section">
-      <div class="section-index">01 / PROFILE</div>
-      <div class="section-heading">
-        <p class="eyebrow">WHO IS RUNNING THIS SYSTEM?</p>
-        <h2>ENGINEER<br><span>IN PROGRESS.</span></h2>
-      </div>
-      <div class="profile-grid">
-        <div class="profile-copy">
-          <p class="lead">I’m a 2026 Information Science &amp; Engineering graduate from Global Academy of Technology, Bengaluru, focused on entry-level DevOps, cloud and infrastructure roles.</p>
-          <p>I learn by building systems, breaking them, reading the logs and fixing what went wrong — from Linux and containers to Kafka-connected microservices and delivery workflows.</p>
-        </div>
-        <div class="profile-console glass">
-          <div class="console-bar"><span>candidate.yaml</span><b>● ACTIVE</b></div>
-          <pre><span>name:</span> Abdul Azeez
-<span>focus:</span> DevOps / Cloud / Infrastructure
-<span>education:</span> B.E. Information Science
-<span>graduation:</span> 2026
-<span>cgpa:</span> 7.68
-<span>location:</span> Bengaluru, India
-<span>status:</span> <b>open_to_work</b></pre>
-        </div>
-      </div>
-    </section>
-
-    <section id="stack" class="section stack-section">
-      <div class="section-index">02 / STACK</div>
-      <div class="section-heading">
-        <p class="eyebrow">RUNTIME CAPABILITIES</p>
-        <h2>TECHNOLOGY<br><span>CONSTELLATION.</span></h2>
-      </div>
-
-      <div class="stack-console glass">
-        <div class="stack-core">
-          <span>DEVOPS</span>
-          <strong>STACK</strong>
-          <small>HOVER A NODE</small>
-        </div>
-        <button class="tech-node n1" data-detail="Ubuntu, Linux CLI, permissions, processes, packages and troubleshooting">LINUX</button>
-        <button class="tech-node n2" data-detail="Images, containers, Dockerfiles, Compose, networking and troubleshooting">DOCKER</button>
-        <button class="tech-node n3" data-detail="EC2, S3, IAM, VPC and CloudWatch fundamentals">AWS</button>
-        <button class="tech-node n4" data-detail="Topics, producers, consumers and event-driven service communication">KAFKA</button>
-        <button class="tech-node n5" data-detail="Infrastructure-as-code fundamentals and repeatable provisioning practice">TERRAFORM</button>
-        <button class="tech-node n6" data-detail="Automation, configuration workflows and infrastructure practice">ANSIBLE</button>
-        <button class="tech-node n7" data-detail="GitHub workflows, Jenkins fundamentals and delivery automation concepts">CI/CD</button>
-        <button class="tech-node n8" data-detail="Git, GitHub, branching, staging, commits and repository workflows">GIT</button>
-        <div class="stack-detail" id="stack-detail">Move across the constellation to inspect a capability.</div>
-      </div>
-    </section>
-
-    <section id="projects" class="section projects-section">
-      <div class="section-index">03 / SYSTEMS</div>
-      <div class="section-heading">
-        <p class="eyebrow">BUILD · CONNECT · TROUBLESHOOT</p>
-        <h2>SELECTED<br><span>SYSTEMS.</span></h2>
-      </div>
-
-      <article class="architecture glass">
-        <div class="architecture-head">
-          <div>
-            <span>PROJECT 01 / CURRENT BUILD</span>
-            <h3>E-commerce Microservices Platform</h3>
-          </div>
-          <a href="https://github.com/zeez000/ecommerce-platform" target="_blank" rel="noreferrer">INSPECT SOURCE ↗</a>
-        </div>
-
-        <div class="flow-map" aria-label="Visual simulation of the project architecture">
-          <div class="flow-node client">CLIENT</div>
-          <div class="flow-node api">API</div>
-          <div class="flow-node product">PRODUCT</div>
-          <div class="flow-node order">ORDER</div>
-          <div class="flow-node kafka">KAFKA</div>
-          <div class="flow-node inventory">INVENTORY</div>
-          <div class="flow-node mongo">MONGODB</div>
-          <div class="flow-node redis">REDIS</div>
-          <svg viewBox="0 0 1000 420" preserveAspectRatio="none" aria-hidden="true">
-            <path d="M110 210 L250 210 L380 125 L520 210 L675 210 L835 210"/>
-            <path d="M250 210 L380 300 L520 210"/>
-            <path d="M380 125 L380 55"/>
-            <path d="M675 210 L835 315"/>
-          </svg>
-          <span class="packet p1"></span>
-          <span class="packet p2"></span>
-          <div class="event-toast" id="event-toast"><span>order.created</span><b>EVENT ACCEPTED</b></div>
-        </div>
-
-        <div class="architecture-foot">
-          <p>Node.js · Express · MongoDB · Redis · Apache Kafka · Docker Compose</p>
-          <p id="flow-status">SIMULATING: client → api → order → kafka → inventory</p>
-        </div>
-      </article>
-
-      <div class="project-row">
-        <article class="project glass">
-          <span>PROJECT 02 / AUTOMATION</span>
-          <h3>CI/CD Pipeline Practice</h3>
-          <p>Git and GitHub workflows, delivery automation, CI/CD concepts and repeatable build/deployment experiments.</p>
-          <a href="https://github.com/zeez000/devops-cicd-project" target="_blank" rel="noreferrer">OPEN REPOSITORY ↗</a>
-        </article>
-        <article class="project glass">
-          <span>PROJECT 03 / LAB</span>
-          <h3>DevOps Practice Lab</h3>
-          <p>Linux workflows, containerization experiments and practical DevOps tooling documented as a learning lab.</p>
-          <a href="https://github.com/zeez000/devops" target="_blank" rel="noreferrer">OPEN REPOSITORY ↗</a>
-        </article>
-      </div>
-    </section>
-
-    <section id="contact" class="section contact-section">
-      <div class="contact-terminal glass">
-        <p><span>abdul@devops:~$</span> kubectl get candidate</p>
-        <div class="terminal-table">
-          <span>NAME</span><span>ROLE</span><span>STATUS</span>
-          <b>abdul-azeez</b><b>devops-engineer</b><b class="ok">AVAILABLE</b>
-        </div>
-        <p><span>abdul@devops:~$</span> ./contact.sh</p>
-        <h2>LET’S BUILD<br><em>SOMETHING SOLID.</em></h2>
-        <div class="contact-links">
-          <a href="mailto:abdzeez000@gmail.com">EMAIL ↗</a>
-          <a href="https://github.com/zeez000" target="_blank" rel="noreferrer">GITHUB ↗</a>
-          <a href="https://linkedin.com/in/abdul-azeez-046062249" target="_blank" rel="noreferrer">LINKEDIN ↗</a>
-        </div>
-      </div>
-    </section>
+  <main class="home-scene">
+    <div class="hero-title"><p>DEVOPS · CLOUD · INFRASTRUCTURE</p><h1>ABDUL <span>AZEEZ</span></h1></div>
+    <div class="story"><p class="story-line s1">I BUILD SYSTEMS.</p><p class="story-line s2">I BREAK THEM.</p><p class="story-line s3">I READ THE LOGS.</p><p class="story-line s4">I FIX THEM.</p><p class="story-final">CHOOSE WHERE TO ENTER.</p></div>
+    <nav class="orbit-nav" aria-label="Explore portfolio">
+      <a class="orbit-link orbit-profile portal-link" href="profile.html" data-label="01">PROFILE <span>WHO I AM</span></a>
+      <a class="orbit-link orbit-stack portal-link" href="stack.html" data-label="02">STACK <span>WHAT I USE</span></a>
+      <a class="orbit-link orbit-projects portal-link" href="projects.html" data-label="03">PROJECTS <span>WHAT I BUILT</span></a>
+      <a class="orbit-link orbit-contact portal-link" href="contact.html" data-label="04">CONTACT <span>OPEN CHANNEL</span></a>
+    </nav>
+    <div class="horizon-label" aria-hidden="true"><span>EVENT HORIZON</span><i></i><b>ENTER</b></div>
+    <p class="scene-note">Move your cursor around the event horizon.</p>
   </main>
-
-  <footer><span>© <span id="year"></span> ABDUL AZEEZ</span><span>PORTFOLIO SYSTEM / SIMULATION MODE</span><a href="#home">REBOOT ↑</a></footer>
   <script src="script.js"></script>
 </body>
 </html>
