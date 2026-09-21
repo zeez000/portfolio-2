@@ -140,4 +140,59 @@
   addEventListener("pointerleave", () => { pointer.x = -1000; pointer.y = -1000; }, { passive: true });
   resize();
   draw(performance.now());
+
+  if (!reducedMotion) {
+    const sectionTitles = [...document.querySelectorAll(".section-title")];
+    const terminal = document.querySelector(".terminal");
+    const cards = [...document.querySelectorAll(".project-card")];
+    const buttons = [...document.querySelectorAll(".action-button")];
+
+    const updateMotion = () => {
+      const vh = innerHeight || 1;
+      sectionTitles.forEach((title, index) => {
+        const rect = title.getBoundingClientRect();
+        const progress = (vh - rect.top) / (vh + rect.height);
+        const clamped = Math.max(0, Math.min(1, progress));
+        const direction = index % 2 === 0 ? 1 : -1;
+        title.style.transform = `translate3d(${(0.5 - clamped) * 28 * direction}px,0,0)`;
+      });
+
+      if (terminal) {
+        const rect = terminal.getBoundingClientRect();
+        const centerOffset = (rect.top + rect.height / 2 - vh / 2) / vh;
+        terminal.style.transform = `translate3d(0,${centerOffset * -18}px,0)`;
+      }
+    };
+
+    addEventListener("scroll", updateMotion, { passive: true });
+    updateMotion();
+
+    cards.forEach(card => {
+      card.addEventListener("pointermove", event => {
+        if (innerWidth < 900) return;
+        const rect = card.getBoundingClientRect();
+        const px = (event.clientX - rect.left) / rect.width - .5;
+        const py = (event.clientY - rect.top) / rect.height - .5;
+        card.classList.add("motion-active");
+        card.style.transform = `perspective(900px) rotateX(${py * -5}deg) rotateY(${px * 6}deg) translateY(-2px)`;
+      });
+      card.addEventListener("pointerleave", () => {
+        card.classList.remove("motion-active");
+        card.style.transform = "";
+      });
+    });
+
+    buttons.forEach(button => {
+      button.addEventListener("pointermove", event => {
+        if (innerWidth < 900) return;
+        const rect = button.getBoundingClientRect();
+        const x = event.clientX - (rect.left + rect.width / 2);
+        const y = event.clientY - (rect.top + rect.height / 2);
+        button.style.transform = `translate3d(${x * .08}px,${y * .12}px,0)`;
+      });
+      button.addEventListener("pointerleave", () => {
+        button.style.transform = "";
+      });
+    });
+  }
 })();
