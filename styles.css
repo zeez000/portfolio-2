@@ -9,3 +9,19 @@ main,footer{position:relative;z-index:1}.page{width:min(calc(100% - 48px),var(--
 @media(max-width:900px){.nav{top:10px;width:calc(100% - 20px)}.availability{display:none}.menu-toggle{display:block}nav{position:absolute;left:0;right:0;top:69px;display:flex;flex-direction:column;gap:0;background:#050505;border:1px solid var(--line);padding:8px;opacity:0;visibility:hidden;transform:translateY(-10px);transition:.25s}.nav.open nav{opacity:1;visibility:visible;transform:none}nav a{padding:14px}.hero{padding-top:110px}.hero-layout{grid-template-columns:1fr;padding-top:8vh}.hero-system{display:none}.section{padding:75px 0}.section-head{grid-template-columns:1fr;margin-bottom:50px}.about-layout{grid-template-columns:1fr}.projects{grid-template-columns:1fr}.project-card.featured{grid-column:auto}.resume-box{align-items:flex-start;flex-direction:column}.skill-groups{grid-template-columns:1fr}.skill-card.wide{grid-column:auto}}
 @media(max-width:600px){.page,footer{width:calc(100% - 30px)}.hero-kicker span:first-child,.hero-footer p{display:none}.hero-layout{padding:6vh 0}.hero h1{font-size:clamp(4.4rem,22vw,7rem)}.hero-copy{font-size:1.05rem;margin-top:28px}.hero-actions{flex-direction:column}.action-button{width:100%}.hero-footer{justify-content:flex-start}.section{padding:90px 0}.skill-card,.project-card{padding:25px}.skill-card ul{columns:1}.terminal dl div{grid-template-columns:1fr;gap:5px}.timeline li{grid-template-columns:40px 1fr}.timeline em{display:none}.resume-box{padding:28px}.resume-actions{width:100%}.contact-row{grid-template-columns:1fr;gap:10px}.contact-row a{overflow-wrap:anywhere}footer{flex-direction:column}footer span:nth-child(2){display:none}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.reveal{opacity:1;transform:none}#network-background{opacity:.35}}
+
+
+/* Motion graphics experiment — portfolio-2 only */
+.motion-ticker{position:relative;z-index:2;width:100%;overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(5,5,5,.88);backdrop-filter:blur(10px)}
+.motion-track{display:flex;align-items:center;gap:24px;width:max-content;padding:15px 0;font:600 .68rem var(--mono);letter-spacing:.16em;color:#b7bdc5;animation:ticker 24s linear infinite;will-change:transform}
+.motion-track b{font-weight:400;color:var(--accent)}
+.motion-ticker:hover .motion-track{animation-play-state:paused}
+.section-title{will-change:transform}
+.project-card{transform-style:preserve-3d;will-change:transform;transition:transform .22s ease,background .35s ease}
+.project-card>*{position:relative;z-index:1}
+.project-card.motion-active{transition:transform .08s linear,background .35s ease}
+.action-button{will-change:transform}
+.terminal{will-change:transform}
+@keyframes ticker{to{transform:translateX(-50%)}}
+@media(max-width:900px){.motion-track{animation-duration:18s}}
+@media(prefers-reduced-motion:reduce){.motion-track{animation:none}.project-card{transform:none!important}.section-title,.terminal,.action-button{transform:none!important}}
