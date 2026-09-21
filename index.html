@@ -1,36 +1,56 @@
 <!doctype html>
 <html lang="en" data-page="home">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#000000">
   <meta name="description" content="Abdul Azeez — DevOps, cloud and infrastructure portfolio.">
-  <title>Abdul Azeez | Event Horizon</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <title>Abdul Azeez | Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="favicon-aa.svg">
-  <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="blackhole.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="blackhole.css">
 </head>
 <body>
   <canvas id="universe" aria-hidden="true"></canvas>
-  <div class="aurora aurora-a" aria-hidden="true"></div><div class="aurora aurora-b" aria-hidden="true"></div>
-  <div class="grain" aria-hidden="true"></div><div class="vignette" aria-hidden="true"></div><div class="warp" aria-hidden="true"></div>
-  <header class="topbar">
-    <a class="brand" href="index.html">AA<span>.</span></a>
-    <p class="system-id">SYSTEM://ABDUL_AZEEZ</p>
-    <div class="top-links"><a href="abdul-azeez-resume.pdf" target="_blank" rel="noreferrer">RÉSUMÉ ↗</a><a href="https://github.com/zeez000" target="_blank" rel="noreferrer">GITHUB ↗</a></div>
-  </header>
-  <main class="home-scene">
-    <div class="hero-title"><p>DEVOPS · CLOUD · INFRASTRUCTURE</p><h1>ABDUL <span>AZEEZ</span></h1></div>
-    <div class="story"><p class="story-line s1">I BUILD SYSTEMS.</p><p class="story-line s2">I BREAK THEM.</p><p class="story-line s3">I READ THE LOGS.</p><p class="story-line s4">I FIX THEM.</p><p class="story-final">CHOOSE WHERE TO ENTER.</p></div>
-    <nav class="orbit-nav" aria-label="Explore portfolio">
-      <a class="orbit-link orbit-profile portal-link" href="profile.html" data-label="01">PROFILE <span>WHO I AM</span></a>
-      <a class="orbit-link orbit-stack portal-link" href="stack.html" data-label="02">STACK <span>WHAT I USE</span></a>
-      <a class="orbit-link orbit-projects portal-link" href="projects.html" data-label="03">PROJECTS <span>WHAT I BUILT</span></a>
-      <a class="orbit-link orbit-contact portal-link" href="contact.html" data-label="04">CONTACT <span>OPEN CHANNEL</span></a>
+  <div class="corner-flow flow-one" aria-hidden="true"></div>
+  <div class="corner-flow flow-two" aria-hidden="true"></div>
+  <div class="corner-flow flow-three" aria-hidden="true"></div>
+
+  <button id="enter-hole" class="enter-hole" aria-label="Enter portfolio"></button>
+
+  <main class="portfolio-shell" aria-hidden="true">
+    <div class="shell-copy">
+      <p class="shell-kicker">DEVOPS · CLOUD · INFRASTRUCTURE</p>
+      <h1>ABDUL<br><span>AZEEZ</span></h1>
+      <p class="shell-lead">Entry-level DevOps and cloud engineer building hands-on systems with Linux, Docker, AWS, Kafka, CI/CD and infrastructure automation.</p>
+    </div>
+
+    <nav class="portal-grid" aria-label="Portfolio sections">
+      <a class="portal-card portal-link" href="profile.html">
+        <small>01</small><strong>PROFILE</strong><span>Who I am →</span>
+      </a>
+      <a class="portal-card portal-link" href="stack.html">
+        <small>02</small><strong>STACK</strong><span>What I use →</span>
+      </a>
+      <a class="portal-card portal-link" href="projects.html">
+        <small>03</small><strong>PROJECTS</strong><span>What I built →</span>
+      </a>
+      <a class="portal-card portal-link" href="contact.html">
+        <small>04</small><strong>CONTACT</strong><span>Open channel →</span>
+      </a>
     </nav>
-    <div class="horizon-label" aria-hidden="true"><span>EVENT HORIZON</span><i></i><b>ENTER</b></div>
-    <p class="scene-note">Move your cursor around the event horizon.</p>
+
+    <div class="shell-links">
+      <a href="abdul-azeez-resume.pdf" target="_blank" rel="noreferrer">RÉSUMÉ ↗</a>
+      <a href="https://github.com/zeez000" target="_blank" rel="noreferrer">GITHUB ↗</a>
+      <a href="https://linkedin.com/in/abdul-azeez-046062249" target="_blank" rel="noreferrer">LINKEDIN ↗</a>
+    </div>
   </main>
+
+  <div class="page-warp" aria-hidden="true"></div>
   <script src="script.js"></script>
 </body>
 </html>
