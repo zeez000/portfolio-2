@@ -45,7 +45,7 @@
     let bestDist = Infinity;
 
     for (const el of candidates()) {
-      if (el.id === "blackhole-trigger") continue;
+      if (el.id === "blackhole-trigger" || el.id === "portal") continue;
       const r = el.getBoundingClientRect();
       if (!expandedHit(r, 30)) continue;
       const d = distanceToRect(r);
@@ -133,7 +133,7 @@
     rect = null;
   }, { passive: true });
 
-  const hole = document.getElementById("blackhole-trigger");
+  const hole = document.getElementById("blackhole-trigger") || document.getElementById("portal");
   if (hole) {
     hole.addEventListener("pointerenter", () => {
       root.classList.add("cursor-hole");
