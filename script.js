@@ -1,214 +1,103 @@
 (() => {
   "use strict";
-
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const boot = document.querySelector(".boot-screen");
-  const nav = document.querySelector("[data-nav]");
-  const progress = document.querySelector(".scroll-progress span");
-  const phaseLabel = document.getElementById("phase-label");
-  const modeValue = document.getElementById("mode-value");
-  const glow = document.querySelector(".cursor-glow");
-  const logBox = document.getElementById("log-lines");
-  const flowToast = document.getElementById("event-toast");
-  const flowStatus = document.getElementById("flow-status");
+  const page = document.documentElement.dataset.page || "home";
+  const canvas = document.getElementById("universe");
+  const ctx = canvas?.getContext("2d");
+  const portalLinks = [...document.querySelectorAll(".portal-link")];
+  const techButtons = [...document.querySelectorAll("#tech-orbit button")];
+  const techDetail = document.getElementById("tech-detail");
+  requestAnimationFrame(() => document.body.classList.add("ready"));
 
-  document.getElementById("year").textContent = new Date().getFullYear();
+  portalLinks.forEach(link => link.addEventListener("click", e => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || link.target === "_blank") return;
+    const href = link.getAttribute("href");
+    if (!href || href.startsWith("#")) return;
+    e.preventDefault();
+    document.body.classList.add("transitioning");
+    setTimeout(() => { location.href = href; }, reduced ? 80 : 620);
+  }));
 
-  if (!reduced) setTimeout(() => boot?.classList.add("done"), 1450);
-  else boot?.classList.add("done");
-
-  const phases = [
-    { id: "home", label: "DISCOVER" },
-    { id: "about", label: "BUILD" },
-    { id: "stack", label: "CONNECT" },
-    { id: "projects", label: "DEPLOY" },
-    { id: "contact", label: "AVAILABLE" }
-  ];
-
-  const updateScroll = () => {
-    const max = document.documentElement.scrollHeight - innerHeight;
-    const ratio = max > 0 ? scrollY / max : 0;
-    progress.style.width = `${ratio * 100}%`;
-    nav?.classList.toggle("scrolled", scrollY > 30);
-
-    let phase = phases[0];
-    for (const item of phases) {
-      const section = document.getElementById(item.id);
-      if (section && scrollY >= section.offsetTop - innerHeight * .42) phase = item;
-    }
-    if (phaseLabel) phaseLabel.textContent = phase.label;
-    if (modeValue) modeValue.textContent = phase.label;
-    document.body.dataset.phase = phase.label.toLowerCase();
-
-    document.querySelectorAll("nav a").forEach(link => {
-      link.classList.toggle("active", link.hash === `#${phase.id}`);
-    });
-  };
-  addEventListener("scroll", updateScroll, { passive: true });
-  updateScroll();
-
-  addEventListener("pointermove", e => {
-    if (!glow || reduced) return;
-    glow.style.left = `${e.clientX}px`;
-    glow.style.top = `${e.clientY}px`;
-  }, { passive: true });
-
-  const logMessages = [
-    "container healthcheck passed",
-    "kafka broker connected",
-    "order.created event received",
-    "inventory reservation complete",
-    "docker network ready",
-    "git workflow synchronized",
-    "aws region handshake ok",
-    "pipeline stage passed",
-    "service discovery refreshed",
-    "mongodb connection healthy"
-  ];
-  let logIndex = 0;
-  const pushLog = () => {
-    if (!logBox) return;
-    const time = new Date().toLocaleTimeString([], { hour12:false, hour:"2-digit", minute:"2-digit", second:"2-digit" });
-    const row = document.createElement("p");
-    row.innerHTML = `<b>${time}</b>${logMessages[logIndex % logMessages.length]}`;
-    logIndex++;
-    logBox.prepend(row);
-    while (logBox.children.length > 4) logBox.lastElementChild.remove();
-  };
-  for (let i = 0; i < 4; i++) pushLog();
-  if (!reduced) setInterval(pushLog, 2200);
-
-  const techNodes = [...document.querySelectorAll(".tech-node")];
-  const detail = document.getElementById("stack-detail");
-  techNodes.forEach(node => {
-    node.addEventListener("mouseenter", () => {
-      techNodes.forEach(n => n.classList.remove("active"));
-      node.classList.add("active");
-      if (detail) detail.textContent = `${node.textContent} // ${node.dataset.detail}`;
-    });
-    node.addEventListener("focus", () => {
-      techNodes.forEach(n => n.classList.remove("active"));
-      node.classList.add("active");
-      if (detail) detail.textContent = `${node.textContent} // ${node.dataset.detail}`;
-    });
+  techButtons.forEach(button => {
+    const activate = () => {
+      techButtons.forEach(item => item.classList.remove("active"));
+      button.classList.add("active");
+      if (techDetail) techDetail.textContent = button.textContent + " // " + button.dataset.detail;
+    };
+    button.addEventListener("mouseenter", activate);
+    button.addEventListener("focus", activate);
   });
 
-  if (!reduced) {
-    setInterval(() => {
-      flowToast?.classList.add("flash");
-      if (flowStatus) flowStatus.textContent = "EVENT: order.created → kafka → inventory.reserve()";
-      setTimeout(() => {
-        flowToast?.classList.remove("flash");
-        if (flowStatus) flowStatus.textContent = "SIMULATING: client → api → order → kafka → inventory";
-      }, 1200);
-    }, 5000);
-  }
-
-  const canvas = document.getElementById("infra-canvas");
-  const ctx = canvas?.getContext("2d");
   if (!canvas || !ctx) return;
 
-  let w = 0, h = 0, dpr = 1, raf = 0;
-  const pointer = { x: -9999, y: -9999 };
-  const labels = ["CLIENT","NGINX","API","PRODUCT","ORDER","KAFKA","INVENTORY","MONGODB","REDIS","AWS"];
-  let nodes = [];
-  let packets = [];
+  let width=0,height=0,dpr=1,frame=0,stars=[],particles=[];
+  const pointer={x:-9999,y:-9999};
+  const settings={
+    home:{x:.50,y:.50,scale:1,spin:1},
+    profile:{x:.80,y:.56,scale:.74,spin:.78},
+    stack:{x:.18,y:.52,scale:.68,spin:1.15},
+    projects:{x:.78,y:.42,scale:.72,spin:.92},
+    contact:{x:.18,y:.55,scale:.66,spin:.82}
+  }[page] || {x:.5,y:.5,scale:1,spin:1};
 
-  const layouts = {
-    discover: [
-      [.10,.20],[.28,.16],[.48,.23],[.73,.16],[.86,.31],[.54,.47],[.78,.56],[.89,.76],[.54,.79],[.20,.69]
-    ],
-    build: [
-      [.18,.28],[.33,.18],[.50,.27],[.70,.18],[.82,.34],[.50,.50],[.72,.60],[.84,.75],[.50,.78],[.23,.69]
-    ],
-    connect: [
-      [.50,.08],[.22,.22],[.78,.22],[.12,.50],[.88,.50],[.50,.50],[.20,.78],[.80,.78],[.50,.90],[.50,.24]
-    ],
-    deploy: [
-      [.08,.50],[.22,.50],[.36,.34],[.36,.67],[.52,.50],[.68,.50],[.85,.38],[.85,.62],[.68,.72],[.68,.18]
-    ],
-    available: [
-      [.15,.20],[.35,.15],[.55,.18],[.75,.15],[.85,.35],[.68,.52],[.82,.72],[.55,.80],[.32,.76],[.18,.60]
-    ]
+  const makeStar=()=>({x:Math.random(),y:Math.random(),r:Math.random()<.92?Math.random()*.8+.18:Math.random()*1.8+.8,a:Math.random()*.75+.12,tw:Math.random()*Math.PI*2});
+  const makeParticle=(i=0)=>({angle:Math.random()*Math.PI*2,radius:.86+Math.random()*.95,speed:(.00045+Math.random()*.00125)*(Math.random()<.18?-1:1),width:.5+Math.random()*2.4,heat:Math.random(),drift:Math.random()*Math.PI*2,phase:i*.37+Math.random()*5});
+  const colorFor=(p,a)=>p.heat<.22?`rgba(112,231,255,${a})`:p.heat<.42?`rgba(138,92,255,${a})`:p.heat<.62?`rgba(255,61,159,${a})`:p.heat<.82?`rgba(255,78,58,${a})`:`rgba(255,208,92,${a})`;
+
+  const resize=()=>{
+    dpr=Math.min(devicePixelRatio||1,2); width=innerWidth; height=innerHeight;
+    canvas.width=Math.max(1,Math.floor(width*dpr)); canvas.height=Math.max(1,Math.floor(height*dpr));
+    canvas.style.width=width+"px"; canvas.style.height=height+"px"; ctx.setTransform(dpr,0,0,dpr,0,0);
+    stars=Array.from({length:Math.min(900,Math.max(320,Math.floor(width*height/2100)))},makeStar);
+    particles=Array.from({length:width<700?720:1500},(_,i)=>makeParticle(i));
   };
 
-  const edges = [[0,1],[1,2],[2,3],[2,4],[3,5],[4,5],[5,6],[6,7],[6,8],[6,9],[9,7],[9,8]];
+  const draw=time=>{
+    ctx.clearRect(0,0,width,height); ctx.fillStyle="#000"; ctx.fillRect(0,0,width,height);
+    const cx=width*settings.x,cy=height*settings.y,base=Math.min(width,height)*.24*settings.scale;
+    const coreR=Math.min(width,height)*(page==="home"?.18:.13)*settings.scale,ringR=coreR*1.45;
+    const hoverDist=Math.hypot(pointer.x-cx,pointer.y-cy),hoverPull=Math.max(0,1-hoverDist/(coreR*3.2));
 
-  const currentLayout = () => layouts[document.body.dataset.phase || "discover"] || layouts.discover;
-
-  const resize = () => {
-    dpr = Math.min(devicePixelRatio || 1, 2);
-    w = innerWidth; h = innerHeight;
-    canvas.width = w * dpr; canvas.height = h * dpr;
-    canvas.style.width = `${w}px`; canvas.style.height = `${h}px`;
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-
-    const layout = currentLayout();
-    nodes = labels.map((label,i) => {
-      const old = nodes[i];
-      return {
-        label,
-        x: old?.x ?? layout[i][0]*w,
-        y: old?.y ?? layout[i][1]*h,
-        pulse: Math.random()*Math.PI*2
-      };
-    });
-    packets = edges.slice(0,8).map((edge,i) => ({ edge, t:(i/8), speed:.000055 + (i%3)*.000012 }));
-  };
-
-  const draw = time => {
-    ctx.clearRect(0,0,w,h);
-    const layout = currentLayout();
-
-    nodes.forEach((n,i) => {
-      const tx = layout[i][0]*w, ty = layout[i][1]*h;
-      n.x += (tx-n.x)*.025;
-      n.y += (ty-n.y)*.025;
+    stars.forEach(s=>{
+      let x=s.x*width,y=s.y*height; const dx=x-cx,dy=y-cy,dist=Math.hypot(dx,dy)||1,bend=Math.max(0,1-dist/(base*5))*7;
+      x+=(-dy/dist)*bend; y+=(dx/dist)*bend;
+      ctx.fillStyle=`rgba(255,255,255,${s.a*(.72+.28*Math.sin(time*.0015+s.tw))})`;
+      ctx.beginPath(); ctx.arc(x,y,s.r,0,Math.PI*2); ctx.fill();
     });
 
-    edges.forEach(([a,b],i) => {
-      const A=nodes[a], B=nodes[b];
-      const near = Math.min(Math.hypot(A.x-pointer.x,A.y-pointer.y),Math.hypot(B.x-pointer.x,B.y-pointer.y)) < 150;
-      ctx.strokeStyle = near ? "rgba(98,245,255,.38)" : "rgba(98,245,255,.13)";
-      ctx.lineWidth = near ? 1.1 : .7;
-      ctx.setLineDash([5,8]);
-      ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(B.x,B.y);ctx.stroke();
-    });
-    ctx.setLineDash([]);
+    const glow=ctx.createRadialGradient(cx,cy,coreR*.7,cx,cy,ringR*2.8);
+    glow.addColorStop(0,"rgba(0,0,0,0)"); glow.addColorStop(.34,"rgba(255,107,44,.03)"); glow.addColorStop(.52,"rgba(255,48,138,.035)"); glow.addColorStop(.7,"rgba(77,106,255,.025)"); glow.addColorStop(1,"rgba(0,0,0,0)");
+    ctx.fillStyle=glow; ctx.beginPath(); ctx.arc(cx,cy,ringR*2.8,0,Math.PI*2); ctx.fill();
 
-    packets.forEach((p,i) => {
-      if (!reduced) p.t = (p.t + p.speed * 16.67) % 1;
-      const [a,b]=p.edge,A=nodes[a],B=nodes[b];
-      const x=A.x+(B.x-A.x)*p.t, y=A.y+(B.y-A.y)*p.t;
-      ctx.fillStyle="rgba(98,245,255,.95)";
-      ctx.shadowColor="rgba(98,245,255,.8)";ctx.shadowBlur=12;
-      ctx.beginPath();ctx.arc(x,y,2.2,0,Math.PI*2);ctx.fill();
-      ctx.shadowBlur=0;
-    });
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(-.18);
+    for(let pass=0;pass<3;pass++){
+      const ps=[1.22,1,.78][pass],as=[.22,.42,.62][pass];
+      particles.forEach(p=>{
+        if(!reduced) p.angle+=p.speed*settings.spin*(1+hoverPull*.65);
+        const ripple=Math.sin(p.angle*3+time*.0014+p.phase)*.065+Math.sin(p.angle*7-time*.0009+p.phase)*.025;
+        const r=ringR*p.radius*ps*(1+ripple),ex=r*Math.cos(p.angle),ey=r*Math.sin(p.angle)*(.34+.05*Math.sin(time*.0006+p.drift)),tan=p.angle+Math.PI/2,len=4+p.width*7+(1-p.radius+.86)*5;
+        const alpha=Math.max(.02,as*(1.65-p.radius)*(.58+.42*Math.sin(p.phase+time*.001)));
+        ctx.strokeStyle=colorFor(p,alpha); ctx.lineWidth=Math.max(.35,p.width*(pass===2?1.18:.7)); ctx.beginPath();
+        ctx.moveTo(ex-Math.cos(tan)*len,ey-Math.sin(tan)*len*.34); ctx.lineTo(ex+Math.cos(tan)*len,ey+Math.sin(tan)*len*.34); ctx.stroke();
+      });
+    }
+    ctx.restore();
 
-    nodes.forEach((n,i) => {
-      const dist=Math.hypot(n.x-pointer.x,n.y-pointer.y);
-      const active=dist<120;
-      const pulse=1+(Math.sin(time*.002+n.pulse)+1)*.35;
-      ctx.fillStyle=active?"rgba(98,245,255,.95)":"rgba(98,245,255,.55)";
-      ctx.beginPath();ctx.arc(n.x,n.y,active?4.5:2.5*pulse,0,Math.PI*2);ctx.fill();
-      ctx.strokeStyle=active?"rgba(98,245,255,.42)":"rgba(98,245,255,.12)";
-      ctx.beginPath();ctx.arc(n.x,n.y,active?22:11+pulse*3,0,Math.PI*2);ctx.stroke();
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(-.18); ctx.scale(1,.35);
+    const rg=ctx.createRadialGradient(0,0,ringR*.88,0,0,ringR*1.24);
+    rg.addColorStop(0,"rgba(0,0,0,0)"); rg.addColorStop(.28,"rgba(255,91,48,.16)"); rg.addColorStop(.52,"rgba(255,207,95,.92)"); rg.addColorStop(.64,"rgba(255,74,75,.72)"); rg.addColorStop(.8,"rgba(113,80,255,.34)"); rg.addColorStop(1,"rgba(0,0,0,0)");
+    ctx.fillStyle=rg; ctx.beginPath(); ctx.arc(0,0,ringR*1.25,0,Math.PI*2); ctx.fill(); ctx.restore();
 
-      if (w > 760) {
-        ctx.font="500 9px JetBrains Mono, monospace";
-        ctx.fillStyle=active?"rgba(238,247,248,.9)":"rgba(151,180,184,.42)";
-        ctx.fillText(n.label,n.x+10,n.y-9);
-      }
-    });
+    const core=ctx.createRadialGradient(cx,cy,0,cx,cy,coreR*1.08);
+    core.addColorStop(0,"rgba(0,0,0,1)"); core.addColorStop(.78,"rgba(0,0,0,1)"); core.addColorStop(.92,"rgba(0,0,0,.98)"); core.addColorStop(1,"rgba(0,0,0,0)");
+    ctx.fillStyle=core; ctx.beginPath(); ctx.arc(cx,cy,coreR*1.11,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle=`rgba(255,218,140,${.10+hoverPull*.1})`; ctx.lineWidth=1; ctx.beginPath(); ctx.arc(cx,cy,coreR*1.05,0,Math.PI*2); ctx.stroke();
 
-    if (!reduced) raf=requestAnimationFrame(draw);
+    if(!reduced) frame=requestAnimationFrame(draw);
   };
 
   addEventListener("pointermove",e=>{pointer.x=e.clientX;pointer.y=e.clientY},{passive:true});
   addEventListener("pointerleave",()=>{pointer.x=-9999;pointer.y=-9999},{passive:true});
-  addEventListener("resize",()=>{cancelAnimationFrame(raf);resize();draw(performance.now())},{passive:true});
-
-  resize();
-  draw(performance.now());
+  addEventListener("resize",()=>{cancelAnimationFrame(frame);resize();draw(performance.now())},{passive:true});
+  resize(); draw(performance.now());
 })();
