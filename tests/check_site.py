@@ -47,20 +47,29 @@ try:
             if STRICT:
                 page.wait_for_function('window.portfolioState.scene === "webgl"', timeout=45000)
             page.evaluate('document.fonts.ready')
+            fonts = page.evaluate('''async () => {
+                const requests = ['400 16px "DM Sans"', 'italic 400 16px "Instrument Serif"'];
+                return Promise.all(requests.map(async font => {
+                    try {
+                        const faces = await document.fonts.load(font, 'Portfolio');
+                        return {font, count:faces.length, loaded:faces.length > 0 && faces.every(f => f.status === 'loaded')};
+                    } catch (error) { return {font, loaded:false, error:String(error)}; }
+                }));
+            }''')
             page.wait_for_timeout(1600)
+            page.screenshot(path=str(OUT / f'{name}-hero.png'))
+            page.screenshot(path=str(OUT / f'{name}-hero.jpg'), type='jpeg', quality=75)
             check(name + ': no horizontal overflow', width_ok(page))
             check(name + ': one main heading', page.locator('h1').count() == 1)
             check(name + ': personal content', 'Abdul Azeez' in page.locator('body').inner_text())
             check(name + ': 3 repository destinations', len(set(page.locator('.featured-project a[href*="github.com"], .row-copy a[href*="github.com"]').evaluate_all('(els) => els.map(e => e.href)'))) == 3)
             state = page.evaluate('window.portfolioState')
-            report[name] = state
+            report[name] = {**state, 'fonts':fonts}
             if STRICT:
                 check(name + ': actual GSAP loaded', state['gsap'])
                 check(name + ': actual Three.js rendered', state['scene'] == 'webgl')
                 check(name + ': Lenis loaded', page.evaluate('typeof window.Lenis === "function"'))
-                check(name + ': fonts loaded', page.evaluate('document.fonts.check("16px DM Sans") && document.fonts.check("16px Instrument Serif")'))
-            page.screenshot(path=str(OUT / f'{name}-hero.png'))
-            page.screenshot(path=str(OUT / f'{name}-hero.jpg'), type='jpeg', quality=75)
+                check(name + ': rendered font styles loaded', all(font['loaded'] for font in fonts), fonts)
             page.locator('.structure-toggle').click()
             check(name + ': structure toggle', page.locator('.structure-toggle').get_attribute('aria-pressed') == 'true')
             page.wait_for_timeout(1600)
