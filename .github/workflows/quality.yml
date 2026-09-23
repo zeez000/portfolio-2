@@ -1,0 +1,40 @@
+name: Portfolio 2 quality checks
+on:
+  push:
+    branches: [main, redesign/studio-20260923]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: portfolio-2-qa-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  browser-checks:
+    if: github.repository == 'zeez000/portfolio-2'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser test dependencies
+        run: |
+          python -m pip install playwright==1.55.0
+          python -m playwright install --with-deps chromium
+      - name: Validate JavaScript
+        run: |
+          node --check assets/site.js
+          node --check assets/scene.js
+      - name: Test real animations and responsive interfaces
+        env:
+          STRICT_ENHANCEMENTS: '1'
+        run: python tests/check_site.py
+      - name: Save screenshots and test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-2-browser-review
+          path: qa-artifacts/
+          retention-days: 7
