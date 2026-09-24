@@ -11,7 +11,6 @@
   let lenis = null;
   let lenisTick = null;
   let motionContext = null;
-  let lastDialogTrigger = null;
   const hasGsap = Boolean(window.gsap && window.ScrollTrigger);
   if (hasGsap) gsap.registerPlugin(ScrollTrigger);
   const motionButton = $('.motion-toggle');
@@ -67,7 +66,7 @@
   refreshMotion();
   if (motionEnabled && hasGsap) {
     gsap.from('.title-line > span', { yPercent: 110, rotation: 2, duration: 1.1, stagger: 0.14, ease: 'power4.out', clearProps: 'transform' });
-    gsap.from('.hero-intro, .primary-link', { y: 16, opacity: 0, duration: 0.85, stagger: 0.12, delay: 0.4, ease: 'power3.out', clearProps: 'all' });
+    gsap.from('.hero-intro, .hero-actions, .hero-skills', { y: 16, opacity: 0, duration: 0.85, stagger: 0.12, delay: 0.4, ease: 'power3.out', clearProps: 'all' });
   }
 
   // Both the WebGL scene and the CSS fallback respond to the same accessible button.
@@ -108,6 +107,7 @@
   window.addEventListener('scroll', () => { if (!scrollQueued) { scrollQueued = true; requestAnimationFrame(() => { updateProgress(); scrollQueued = false; }); } }, { passive: true });
   window.addEventListener('resize', updateProgress, { passive: true });
   updateProgress();
+  $$('.verification-panel, .toolkit-list details').forEach(details => details.addEventListener('toggle', () => { if (hasGsap) ScrollTrigger.refresh(); updateProgress(); }));
   const sections = $$('#work, #about, #toolkit, #contact');
   const navObserver = new IntersectionObserver(entries => {
     entries.forEach(entry => { if (entry.isIntersecting) { $$('.desktop-nav a').forEach(a => a.removeAttribute('aria-current')); const active = $(`.desktop-nav a[href="#${entry.target.id}"]`); if (active) active.setAttribute('aria-current', 'location'); } });
@@ -144,26 +144,6 @@
     timers.push(setTimeout(() => { traceCaption.textContent = '03 / Inventory processes the reservation or rejection.'; }, delay * 2));
     timers.push(setTimeout(() => { poster.classList.remove('trace-active'); traceButton.disabled = false; traceCaption.textContent = 'Order \u2192 Kafka \u2192 Inventory. Replay to follow the flow.'; }, delay * 3 + 350));
   });
-
-  const projects = {
-    commerce: { eyebrow: '01 / APPLICATION SYSTEMS', title: 'E-commerce, one event at a time.', intro: 'A personal e-commerce platform with independent Product, Order, and Inventory services, connected through Apache Kafka, MongoDB, and Docker Compose.', focus: 'Exploring how an order event reaches inventory processing, and how reservation and rejection workflows fit into an asynchronous system. The diagram on this page is an illustrative sketch, not a live monitor.', tools: 'Docker Compose / Apache Kafka / MongoDB', url: 'https://github.com/zeez000/ecommerce-platform' },
-    pipeline: { eyebrow: '02 / DELIVERY AUTOMATION', title: 'From commit to confidence.', intro: 'A hands-on CI/CD practice project built around Git, GitHub workflows, and delivery automation concepts.', focus: 'Exploring repeatable build and deployment experiments, understanding workflow steps, and making changes easier to track. This is a learning project rather than a claim of production-scale delivery.', tools: 'Git / GitHub workflows / CI/CD concepts', url: 'https://github.com/zeez000/devops-cicd-project' },
-    lab: { eyebrow: '03 / HANDS-ON EXPLORATION', title: 'A lab for the what-ifs.', intro: 'A practical DevOps learning lab for Linux workflows, containerization experiments, and tooling.', focus: 'Learning through small experiments: work with a tool, understand its behaviour, troubleshoot the result, and document the next step. The repository is the place to inspect the actual work.', tools: 'Linux / Containers / DevOps practice', url: 'https://github.com/zeez000/devops' }
-  };
-  const projectDialog = $('#project-dialog');
-  function closeProject() { projectDialog.close(); }
-  $$('[data-project]').forEach(button => button.addEventListener('click', () => {
-    const project = projects[button.dataset.project];
-    if (!project) return;
-    lastDialogTrigger = button;
-    $('.dialog-content').innerHTML = `<p class="eyebrow">${project.eyebrow}</p><h2 id="dialog-title">${project.title}</h2><p>${project.intro}</p><h3>THE FOCUS</h3><p>${project.focus}</p><h3>THE TOOLS</h3><p>${project.tools}</p><a class="text-link" href="${project.url}" target="_blank" rel="noopener noreferrer">Inspect the repository <span aria-hidden="true">\u2197</span></a>`;
-    if (lenis) lenis.stop();
-    projectDialog.showModal();
-    if (motionEnabled && hasGsap) gsap.fromTo(projectDialog, { y: 25, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out', clearProps: 'all' });
-  }));
-  $('.dialog-close').addEventListener('click', closeProject);
-  projectDialog.addEventListener('close', () => { if (lenis) lenis.start(); if (lastDialogTrigger) lastDialogTrigger.focus({ preventScroll: true }); });
-  projectDialog.addEventListener('click', event => { if (event.target === projectDialog) { const r = projectDialog.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) closeProject(); } });
 
   const copyButton = $('.copy-email');
   copyButton.addEventListener('click', async () => {
