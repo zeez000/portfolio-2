@@ -1,48 +1,53 @@
-# Abdul Azeez - Systems in motion
+# Abdul Azeez - Portfolio 2
 
-A complete standalone redesign of **portfolio-2**, the testing portfolio.
+Recruiter-facing DevOps and cloud portfolio, retaining the Systems in Motion visual design.
 
-Testing site: https://zeez000.github.io/portfolio-2/
+## Deployment boundary
 
-## Isolation
+This repository is **zeez000/portfolio-2**, the testing site at https://zeez000.github.io/portfolio-2/.
+The separate **zeez000/PORTFOLIO** live repository and its domain are not part of this deployment. No CNAME or production settings are changed. This testing site remains `noindex, nofollow`.
 
-`zeez000/PORTFOLIO` is the separate live repository. Do not modify that repository, its deployment, or its domain. This repository has no CNAME. The old testing design is preserved on `archive/before-studio-20260923`.
+The pre-refinement version is preserved on `archive/before-recruiter-20260923`. The older pre-redesign version is on `archive/before-studio-20260923`.
 
-## Design and implementation
+## Recruiter-facing changes
 
-Warm off-white, ink, cobalt, and chartreuse. Large DM Sans typography is contrasted with Instrument Serif. An interactive layered sculpture represents independent parts working together. The projects, diagrams, profile, toolkit, and contact section share the same visual language.
+- Name and explicit DevOps / Cloud / Early Career role lead the opening.
+- Resume access is available in the header, hero, About, mobile navigation, and footer. The original PDF is unchanged.
+- One implemented e-commerce project is featured, with source links, a directly reachable technical case study, and dated CI evidence.
+- Technical notes explain container networking, Kafka inventory decisions, CI, documentation, and a Codespaces networking diagnosis.
+- The empty CI/CD practice repository and README-only lab no longer appear as completed projects. Their obsolete dialogs were removed; learning areas are represented in a small, clearly labelled note.
+- Verification details use native HTML details/summary and work without JavaScript.
 
-The old CSS and JavaScript are replaced, not overlaid. Legacy page URLs redirect to the appropriate sections. The original resume PDF is preserved byte-for-byte.
+## Evidence policy
 
-- GSAP 3.13.0 with ScrollTrigger: coordinated typography, reveals, pointer response, and scroll accents.
-- Three.js 0.180.0: nine bevelled layers, pointer response, assembly/explosion, and locally generated studio lighting. No downloaded 3D model.
-- Lenis 1.3.11: smooth desktop wheel scrolling synchronized with GSAP. Touch devices retain native scrolling.
-- Native anchor navigation, details/summary, and accessible dialogs. The content-led site requires no application framework or build step.
+Project source links are pinned to `zeez000/ecommerce-platform` commit `51640fe62522416e101af080e7a1e3801d4239c8`, reviewed on 23 September 2026.
 
-Libraries use pinned CDN URLs. If they are unavailable, content, links, project notes, and the CSS sculpture remain available. Fonts use display=swap and system fallbacks. No font files are included in this repository.
+The dated evidence links to Ecommerce Platform CI run `35885094668`, job `107263087989`, which passed the build, health checks, and end-to-end smoke test. The assertions cover product/inventory creation, a confirmed order, an insufficient-stock rejection, unchanged remaining stock after rejection, and the frontend/API proxy checks.
 
-Motion can be disabled in the header; the system reduced-motion preference is honoured. WebGL drawing pauses offscreen, when hidden, and while a reduced-motion static scene is unchanged. The order-flow sketch is illustrative, never a fabricated live status monitor.
+This is a recorded CI result, not a live service monitor. The architecture animation is an illustration. No production cloud deployment, uptime, customer traffic, load-test result, exactly-once guarantee, or production Kubernetes installation is claimed. The Codespaces firewall repair is environment-specific and is not reproduced by the cited CI run.
 
-## Reference review - 23 September 2026
+## Implementation
 
-Reviewed accessible pages and documentation at https://gsap.com/, https://motion.dev/, https://www.react-spring.dev/, https://animejs.com/, https://threejs.org/, and https://lenis.dev/.
+Static HTML with progressive enhancement. The base visual system is in `assets/site.css`; the scoped recruiter-facing layout and case-study components are in `assets/hiring.css`. `assets/site.js` handles navigation, motion preference, the diagram, and small interactions. `assets/scene.js` provides the optional Three.js sculpture.
 
-GSAP informed coordinated timelines. Motion and React Spring informed restrained, continuous interaction. Anime.js informed compact graphic choreography. Three.js enables the sculptural element; Lenis coordinates wheel scrolling. Motion, React Spring, and Anime.js are references rather than redundant runtime dependencies.
+GSAP and ScrollTrigger coordinate motion, Three.js renders the sculpture, and Lenis handles optional desktop scrolling. Native scrolling, content, navigation, and a CSS sculpture remain when the CDN is unavailable. Google Fonts are loaded externally; no font files are bundled here.
 
-https://spring.dev/ could not be retrieved. No claim is made that it was inspected. Interactive visual browsing of reference-site animations was unavailable locally; accessible page content and documentation were reviewed.
+## Local preview and verification
 
-## Content provenance
+```sh
+python -m http.server 8000
+```
 
-Identity, education, location, CGPA, skills, email, LinkedIn, project links, and descriptions were carried over from portfolio-2 profile.html, stack.html, projects.html, and contact.html at commit `f60c9a6b5c7704c6f26e7eecc124b740fd461e0a`. No employment history, certifications, performance metrics, or production-scale achievements were invented.
+Visit `http://localhost:8000/`.
 
-## Development and verification
+```sh
+python -m pip install playwright==1.55.0
+python -m playwright install --with-deps chromium
+node --check assets/site.js
+node --check assets/scene.js
+STRICT_ENHANCEMENTS=1 python tests/check_site.py
+```
 
-Run `python -m http.server 8080` and open http://localhost:8080.
+The GitHub Actions quality workflow performs real Chromium checks at 320, 390, 768, 1440, and 1920 pixels. It verifies fonts and animation libraries, content contracts, header and first-screen resume access, native evidence expansion, mobile navigation, motion controls, keyboard access, original PDF integrity, and blocked-CDN / no-JavaScript fallbacks. Screenshots and the machine-readable report are uploaded as artifacts. These checks are not a substitute for real-device or cross-browser testing.
 
-Browser checks: install `playwright==1.55.0`, run `python -m playwright install chromium`, then `STRICT_ENHANCEMENTS=1 python tests/check_site.py`.
-
-The quality workflow runs only in portfolio-2 with read-only repository permissions. It saves desktop/mobile screenshots and test results as workflow artifacts. It does not deploy. Existing GitHub Pages publishing from this repository's main branch remains responsible for the testing site.
-
-The local no-library fallback was tested separately at 320, 390, 768, 1440, and 1920 pixels. Online animation checks are reported by CI; local fallback checks do not establish that CDN libraries loaded.
-
-The testing site deliberately uses noindex,nofollow. Remove only for a separately authorized production launch.
+Set `BASE_URL` to the deployed testing URL to run the same checks against GitHub Pages. Without it, the script serves the checkout using an ephemeral local port.
